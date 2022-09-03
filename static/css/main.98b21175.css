@@ -1,0 +1,2 @@
+@import url(https://fonts.googleapis.com/css2?family=Poppins&display=swap);*{box-sizing:border-box;font-family:Poppins,sans-serif;margin:0;padding:0}body{display:grid;height:100vh;place-items:center;width:100%}table{border:5px solid #82454e}td{background:#bebebe;font-size:60px;height:100px;text-align:center;width:100px}@media (max-width:500px){td{background:#bebebe;font-size:20px;height:40px;text-align:center;width:40px}}
+/*# sourceMappingURL=main.98b21175.css.map*/
