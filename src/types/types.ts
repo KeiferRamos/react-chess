@@ -1,7 +1,11 @@
+type ColorType = {
+  color: "white" | "black";
+};
+
 export type PiecePropType = {
   id: number;
   name: "pawn" | "rook" | "bishop" | "knight" | "king" | "queen";
-  color: "white" | "black";
+  color: ColorType["color"];
   position: string;
   isOut: boolean;
 };
@@ -9,13 +13,13 @@ export type PiecePropType = {
 export type StorePropType = {
   selectedPiece: PiecePropType | null;
   livePieces: PiecePropType[];
-  current: "white" | "black";
+  current: ColorType["color"];
   isPawnPromoted: Boolean;
 };
 
 type MoveActionType = {
   type: "MOVE_PIECE";
-  payload: [PiecePropType[], "white" | "black"];
+  payload: [PiecePropType[], ColorType["color"]];
 };
 
 type SelectActionType = {
@@ -44,5 +48,17 @@ export type moveHandlerType = {
   ValidMoves: Boolean[];
   tileID: string;
   dispatch: (value: reducerType) => void;
-  opposite: "white" | "black";
+  opposite: ColorType["color"];
+};
+
+export type MoveType = {
+  position: string;
+  color: ColorType["color"];
+  livePieces: PiecePropType[];
+  tileID: string;
+  dispatch: (value: reducerType) => void;
+  selectedPiece: PiecePropType;
+  opposite: ColorType["color"];
+  tileContent: PiecePropType | null;
+  ValidMoves: Boolean[];
 };

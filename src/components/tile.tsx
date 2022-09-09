@@ -9,9 +9,10 @@ import {
 import { useState, useEffect, useContext } from "react";
 import { PiecePropType } from "../types/types";
 import { ContextProvider } from "../context/globalcontext";
-import { MOVE_PIECE, OPEN_MODAL, SELECT_PIECE } from "../actions/actions";
-import getposition from "../helper/getposition";
-import attack from "../helper/attack";
+import { SELECT_PIECE } from "../actions/actions";
+import PawnMove from "../helper/pawn/index";
+import { getPosition } from "../helper/king/getPosition";
+import { KingMoves } from "../helper/king";
 
 const pieces = {
   pawn: <FaChessPawn />,
@@ -51,73 +52,31 @@ function Tile({ tileID }: { tileID: string }) {
       const isallMovesValid = ValidMoves.some((el) => el);
 
       if (isallMovesValid) {
-        const { name, color, position, id: selectedID } = selectedPiece;
+        const { name, color, position } = selectedPiece;
 
         if (name === "pawn") {
-          let pieceDirection;
-          const verticalDirection = "abcdefgh";
+          PawnMove({
+            selectedPiece,
+            livePieces,
+            tileID,
+            ValidMoves,
+            position,
+            dispatch,
+            tileContent,
+            opposite,
+          });
+        }
 
-          if (color === "white") {
-            pieceDirection = verticalDirection.split("").reverse();
-          } else {
-            pieceDirection = verticalDirection.split("");
-          }
-
-          if (ValidMoves[1]) {
-            const rightDirection = [
-              getposition(pieceDirection, position, 1),
-              getposition(pieceDirection, position, 2),
-            ];
-
-            if (pieceDirection.indexOf(position.charAt(0)) > 1) {
-              rightDirection.pop();
-            }
-
-            if (rightDirection.includes(tileID)) {
-              const updatedPiecesPositions = livePieces.map((piece) => {
-                if (piece.id === selectedID) {
-                  return { ...piece, position: tileID };
-                } else {
-                  return piece;
-                }
-              });
-
-              dispatch({
-                type: MOVE_PIECE,
-                payload: [updatedPiecesPositions, opposite],
-              });
-            }
-          } else if (ValidMoves[0]) {
-            const validAttack = [
-              attack(pieceDirection, position, "+1"),
-              attack(pieceDirection, position, "-1"),
-            ];
-
-            if (validAttack.includes(tileContent!.position)) {
-              const updatedPiecesPositions = livePieces
-                .filter(({ position }) => tileID !== position)
-                .map((piece) => {
-                  if (piece.id === selectedID) {
-                    return { ...piece, position: tileID };
-                  } else {
-                    return piece;
-                  }
-                });
-
-              if (
-                position.charAt(0) ===
-                  pieceDirection[pieceDirection.length - 2] &&
-                tileID.charAt(0) === pieceDirection[pieceDirection.length - 1]
-              ) {
-                dispatch({ type: OPEN_MODAL });
-              }
-
-              dispatch({
-                type: MOVE_PIECE,
-                payload: [updatedPiecesPositions, opposite],
-              });
-            }
-          }
+        if (name === "king") {
+          KingMoves({
+            color,
+            position,
+            livePieces,
+            dispatch,
+            tileID,
+            selectedPiece,
+            opposite,
+          });
         }
       } else {
         dispatch({ type: SELECT_PIECE, payload: tileContent });

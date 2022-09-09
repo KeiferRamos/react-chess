@@ -6,8 +6,8 @@ import {
   FaChessKnight,
   FaChessBishop,
 } from "react-icons/fa";
-import { PROMOTE_PAWN } from "../actions/actions";
 
+import { PROMOTE_PAWN } from "../actions/actions";
 import { ContextProvider } from "../context/globalcontext";
 import { PiecePropType } from "../types/types";
 
