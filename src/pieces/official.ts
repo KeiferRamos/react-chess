@@ -1,4 +1,6 @@
-export default [
+import { PiecePropType } from "../types/types";
+
+export const official: PiecePropType[] = [
   {
     id: 17,
     name: "queen",

@@ -1,4 +1,6 @@
-export default [
+import { PiecePropType } from "../types/types";
+
+export const pawns: PiecePropType[] = [
   {
     id: 1,
     name: "pawn",

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-
+import Globalcontext from "./context/globalcontext";
 import App from "./App";
 
 const root = ReactDOM.createRoot(
@@ -8,6 +8,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <Globalcontext>
+      <App />
+    </Globalcontext>
   </React.StrictMode>
 );

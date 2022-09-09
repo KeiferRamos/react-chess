@@ -1,4 +1,4 @@
-import pawn from "./pawn";
-import official from "./official";
+import { pawns } from "./pawn";
+import { official } from "./official";
 
-export default [...pawn, ...official];
+export default [...pawns, ...official];

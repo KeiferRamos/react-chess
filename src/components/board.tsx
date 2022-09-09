@@ -4,7 +4,6 @@ import { createTable } from "../helper/createTable";
 
 function Board() {
   const [tile, setTile] = useState<Array<Array<string>>>([]);
-
   useEffect(() => {
     setTile(createTable());
   }, []);
