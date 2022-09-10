@@ -1,4 +1,4 @@
-type ColorType = {
+export type ColorType = {
   color: "white" | "black";
 };
 

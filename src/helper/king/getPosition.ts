@@ -1,7 +1,7 @@
-import { MoveType, PiecePropType } from "../../types/types";
+import { ColorType, PiecePropType } from "../../types/types";
 
 export const getPosition = (
-  color: "white" | "black",
+  color: ColorType["color"],
   position: string,
   livePieces: PiecePropType[]
 ) => {
@@ -36,10 +36,10 @@ export const getPosition = (
     validKingMoves.push(`${backwardMove}${position.charAt(1)}`);
   }
 
-  const AllPiecePositions = livePieces!.map(({ position }) => position);
-
   validKingMoves = validKingMoves.filter((moves) => {
-    return !AllPiecePositions.includes(moves) && color;
+    const isSameColor =
+      livePieces.find(({ position }) => position === moves)?.color !== color;
+    return isSameColor;
   });
 
   return validKingMoves;

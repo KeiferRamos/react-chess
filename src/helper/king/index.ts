@@ -14,13 +14,24 @@ export const KingMoves = ({
   const AllValidMoves = getPosition(color, position, livePieces);
 
   if (AllValidMoves.includes(tileID)) {
-    const updatedPiecesPositions = livePieces.map((piece) => {
+    let updatedPositions = livePieces;
+
+    const hasPiece = livePieces.find(({ position }) => tileID === position);
+
+    if (hasPiece) {
+      updatedPositions = updatedPositions.filter(
+        ({ id }) => id !== hasPiece.id
+      );
+    }
+
+    updatedPositions = updatedPositions.map((piece) => {
       if (piece.id === selectedPiece.id) {
         return { ...piece, position: tileID };
       } else {
         return piece;
       }
     });
-    dispatch({ type: MOVE_PIECE, payload: [updatedPiecesPositions, opposite] });
+
+    dispatch({ type: MOVE_PIECE, payload: [updatedPositions, opposite] });
   }
 };

@@ -8,12 +8,15 @@ function Board() {
     setTile(createTable());
   }, []);
 
+  const letters = "abcdefgh";
+
   return (
     <table className="board">
       <tbody>
         {tile.map((row, i) => {
           return (
             <tr key={i}>
+              <td className="guide">{letters[i].toUpperCase()}</td>
               {row.map((data, i) => {
                 return <Tile key={i} tileID={data} />;
               })}
@@ -21,6 +24,17 @@ function Board() {
           );
         })}
       </tbody>
+      <tfoot>
+        <tr>
+          {Array.from(Array(9).keys()).map((num, i) => {
+            return (
+              <td className="guide" key={i}>
+                {i ? i : ""}
+              </td>
+            );
+          })}
+        </tr>
+      </tfoot>
     </table>
   );
 }

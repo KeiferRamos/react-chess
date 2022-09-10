@@ -6,13 +6,17 @@ import {
   FaChessKnight,
   FaChessBishop,
 } from "react-icons/fa";
+
 import { useState, useEffect, useContext } from "react";
 import { PiecePropType } from "../types/types";
 import { ContextProvider } from "../context/globalcontext";
 import { SELECT_PIECE } from "../actions/actions";
 import PawnMove from "../helper/pawn/index";
-import { getPosition } from "../helper/king/getPosition";
 import { KingMoves } from "../helper/king";
+import { createTable } from "../helper/createTable";
+import { blocker } from "../helper/rook/blocker";
+import { moves } from "../helper/rook/moves";
+import { RookMove } from "../helper/rook";
 
 const pieces = {
   pawn: <FaChessPawn />,
@@ -77,6 +81,21 @@ function Tile({ tileID }: { tileID: string }) {
             selectedPiece,
             opposite,
           });
+        }
+
+        if (name === "rook") {
+          RookMove({
+            opposite,
+            position,
+            livePieces,
+            color,
+            dispatch,
+            selectedPiece,
+            tileID,
+          });
+        }
+
+        if (name === "bishop") {
         }
       } else {
         dispatch({ type: SELECT_PIECE, payload: tileContent });
