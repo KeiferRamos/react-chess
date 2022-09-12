@@ -13,6 +13,7 @@ export type PiecePropType = {
 export type StorePropType = {
   selectedPiece: PiecePropType | null;
   livePieces: PiecePropType[];
+  deadPieces: PiecePropType[];
   current: ColorType["color"];
   isPawnPromoted: Boolean;
 };
@@ -23,8 +24,8 @@ type MoveActionType = {
 };
 
 type SelectActionType = {
-  type: "SELECT_PIECE";
-  payload: PiecePropType | null;
+  type: "SELECT_PIECE" | "KILL_PIECE";
+  payload: PiecePropType;
 };
 
 type ModalType = {

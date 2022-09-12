@@ -1,8 +1,8 @@
-import { createTable } from "../createTable";
+import { createTable } from "../../helper/createTable";
 import { moves } from "./moves";
 import { blocker } from "./blocker";
 import { MoveType, PiecePropType } from "../../types/types";
-import { MOVE_PIECE } from "../../actions/actions";
+import { KILL_PIECE, MOVE_PIECE } from "../../actions/actions";
 
 export const RookMove = ({
   opposite,
@@ -12,7 +12,7 @@ export const RookMove = ({
   dispatch,
   selectedPiece,
   tileID,
-}: Omit<MoveType, "tileContent" | "ValidMoves">) => {
+}: MoveType) => {
   const allDirection = createTable();
   const spreadDirection = [];
 
@@ -53,17 +53,16 @@ export const RookMove = ({
   });
 
   if (spreadMoves.includes(tileID)) {
-    console.log("gg");
-    const hasPiece = livePieces.find(({ position }) => position === tileID);
-    console.log(hasPiece);
-
-    let updatedPieces: PiecePropType[] = livePieces;
+    let updatedPieces = livePieces;
+    const hasPiece = livePieces.find(({ position }) => tileID === position);
 
     if (hasPiece) {
-      updatedPieces = livePieces.filter(({ id }) => id !== hasPiece.id);
+      dispatch({ type: KILL_PIECE, payload: hasPiece });
+      updatedPieces = updatedPieces.filter(
+        ({ position }) => position !== tileID
+      );
     }
 
-    console.log(selectedPiece, tileID);
     updatedPieces = updatedPieces.map((piece) => {
       if (selectedPiece === piece) {
         return { ...piece, position: tileID };
@@ -73,5 +72,7 @@ export const RookMove = ({
     });
 
     dispatch({ type: MOVE_PIECE, payload: [updatedPieces, opposite] });
+
+    return AllValidMoves;
   }
 };

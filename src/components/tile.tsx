@@ -8,17 +8,17 @@ import {
 } from "react-icons/fa";
 
 import { useState, useEffect, useContext } from "react";
-import { PiecePropType } from "../types/types";
+import { MoveType, PiecePropType } from "../types/types";
 import { ContextProvider } from "../context/globalcontext";
 import { SELECT_PIECE } from "../actions/actions";
-import PawnMove from "../helper/pawn/index";
-import { KingMoves } from "../helper/king";
-import { createTable } from "../helper/createTable";
-import { blocker } from "../helper/rook/blocker";
-import { moves } from "../helper/rook/moves";
-import { RookMove } from "../helper/rook";
+import PawnMove from "../pieces/pawn/index";
+import { KingMove } from "../pieces/king";
+import { RookMove } from "../pieces/rook";
+import { KnightMove } from "../pieces/knight/moves";
+import { BishopMove } from "../pieces/bishop/moves";
+import { QueenMove } from "../pieces/queen/moves";
 
-const pieces = {
+export const pieces = {
   pawn: <FaChessPawn />,
   rook: <FaChessRook />,
   knight: <FaChessKnight />,
@@ -43,7 +43,8 @@ function Tile({ tileID }: { tileID: string }) {
 
   const selectAndmovePiece = () => {
     if (selectedPiece) {
-      const opposite = current === "white" ? "black" : "white";
+      const opposite: "white" | "black" =
+        current === "white" ? "black" : "white";
 
       const ValidMoves: Boolean[] = [false, false];
 
@@ -53,59 +54,42 @@ function Tile({ tileID }: { tileID: string }) {
 
       ValidMoves[1] = livePieces.every(({ position }) => tileID !== position);
 
-      const isallMovesValid = ValidMoves.some((el) => el);
+      const hasValidMoves = ValidMoves.some((el) => el);
 
-      if (isallMovesValid) {
+      if (hasValidMoves) {
         const { name, color, position } = selectedPiece;
 
-        if (name === "pawn") {
-          PawnMove({
-            selectedPiece,
-            livePieces,
-            tileID,
-            ValidMoves,
-            position,
-            dispatch,
-            tileContent,
-            opposite,
-          });
-        }
+        const args = {
+          position,
+          color,
+          livePieces,
+          tileID,
+          dispatch,
+          selectedPiece,
+          opposite,
+          tileContent,
+          ValidMoves,
+        };
 
-        if (name === "king") {
-          KingMoves({
-            color,
-            position,
-            livePieces,
-            dispatch,
-            tileID,
-            selectedPiece,
-            opposite,
-          });
-        }
+        const AllMoves = {
+          pawn: (args: MoveType) => PawnMove(args),
+          rook: (args: MoveType) => RookMove(args),
+          knight: (args: MoveType) => KnightMove(args),
+          bishop: (args: MoveType) => BishopMove(args),
+          king: (args: MoveType) => KingMove(args),
+          queen: (args: MoveType) => QueenMove(args),
+        };
 
-        if (name === "rook") {
-          RookMove({
-            opposite,
-            position,
-            livePieces,
-            color,
-            dispatch,
-            selectedPiece,
-            tileID,
-          });
-        }
-
-        if (name === "bishop") {
-        }
+        AllMoves[name as keyof typeof AllMoves](args);
       } else {
-        dispatch({ type: SELECT_PIECE, payload: tileContent });
+        dispatch({ type: SELECT_PIECE, payload: tileContent! });
         return;
       }
     } else {
       const hasPiece = livePieces.find(({ position }) => position === tileID);
 
       if (hasPiece && hasPiece.color === current) {
-        dispatch({ type: SELECT_PIECE, payload: tileContent });
+        dispatch({ type: SELECT_PIECE, payload: tileContent! });
         return;
       }
     }

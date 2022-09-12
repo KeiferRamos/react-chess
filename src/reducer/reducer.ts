@@ -1,5 +1,6 @@
 import {
   CLOSE_MODAL,
+  KILL_PIECE,
   MOVE_PIECE,
   OPEN_MODAL,
   PROMOTE_PAWN,
@@ -11,6 +12,9 @@ import { reducerType, StorePropType } from "../types/types";
 export function reducer(state: StorePropType, action: reducerType) {
   if (action.type === SELECT_PIECE) {
     return { ...state, selectedPiece: action.payload };
+  }
+  if (action.type === KILL_PIECE) {
+    return { ...state, deadPieces: [...state.deadPieces, action.payload] };
   }
   if (action.type === MOVE_PIECE) {
     return {

@@ -1,8 +1,8 @@
-import { MOVE_PIECE } from "../../actions/actions";
+import { KILL_PIECE, MOVE_PIECE } from "../../actions/actions";
 import { MoveType } from "../../types/types";
 import { getPosition } from "./getPosition";
 
-export const KingMoves = ({
+export const KingMove = ({
   color,
   position,
   livePieces,
@@ -10,7 +10,7 @@ export const KingMoves = ({
   dispatch,
   selectedPiece,
   opposite,
-}: Omit<MoveType, "tileContent" | "ValidMoves">) => {
+}: MoveType) => {
   const AllValidMoves = getPosition(color, position, livePieces);
 
   if (AllValidMoves.includes(tileID)) {
@@ -19,6 +19,7 @@ export const KingMoves = ({
     const hasPiece = livePieces.find(({ position }) => tileID === position);
 
     if (hasPiece) {
+      dispatch({ type: KILL_PIECE, payload: hasPiece });
       updatedPositions = updatedPositions.filter(
         ({ id }) => id !== hasPiece.id
       );

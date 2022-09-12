@@ -12,10 +12,12 @@ body {
   width: 100%;
   display: grid;
   place-items: center;
+  background: #5d6164;
 }
 
 table {
-  border: 5px solid #82454e;
+  border: 5px solid #bebebe;
+  border-collapse: collapse;
 }
 
 td {
@@ -70,6 +72,27 @@ li:hover {
   font-size: 20px;
   width: 40px;
   height: 40px;
+}
+
+.main-container {
+  position: relative;
+  padding: 0 35px;
+}
+
+.white-deads,
+.black-deads {
+  position: absolute;
+  font-size: 30px;
+}
+
+.white-deads {
+  right: 0;
+  top: 0;
+}
+
+.black-deads {
+  left: 0;
+  bottom: 0;
 }
 
 @media (max-width: 500px) {

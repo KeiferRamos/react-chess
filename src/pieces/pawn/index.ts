@@ -1,4 +1,4 @@
-import { MOVE_PIECE, OPEN_MODAL } from "../../actions/actions";
+import { KILL_PIECE, MOVE_PIECE, OPEN_MODAL } from "../../actions/actions";
 import getposition from "./getposition";
 import attack from "./attack";
 import { MoveType } from "../../types/types";
@@ -12,7 +12,7 @@ export default ({
   dispatch,
   tileContent,
   opposite,
-}: Omit<MoveType, "color">) => {
+}: MoveType) => {
   let pieceDirection;
   const verticalDirection = "abcdefgh";
 
@@ -53,15 +53,23 @@ export default ({
     ];
 
     if (validAttack.includes(tileContent!.position)) {
-      const updatedPiecesPositions = livePieces
-        .filter(({ position }) => tileID !== position)
-        .map((piece) => {
-          if (piece.id === selectedPiece.id) {
-            return { ...piece, position: tileID };
-          } else {
-            return piece;
-          }
-        });
+      let updatedPiecesPositions = livePieces;
+      const hasPiece = livePieces.find(({ position }) => tileID === position);
+
+      if (hasPiece) {
+        dispatch({ type: KILL_PIECE, payload: hasPiece });
+        updatedPiecesPositions = livePieces.filter(
+          ({ position }) => tileID !== position
+        );
+      }
+
+      updatedPiecesPositions = updatedPiecesPositions.map((piece) => {
+        if (piece.id === selectedPiece.id) {
+          return { ...piece, position: tileID };
+        } else {
+          return piece;
+        }
+      });
 
       if (
         position.charAt(0) === pieceDirection[pieceDirection.length - 2] &&
