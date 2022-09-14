@@ -22,8 +22,8 @@ function Board() {
       <div className="white-deads">
         {deadPieces
           .filter(({ color }) => color === "white")
-          .map((piece) => {
-            return <Dead {...piece} />;
+          .map((piece, i) => {
+            return <Dead key={i} {...piece} />;
           })}
       </div>
       <table className="board">
@@ -31,7 +31,7 @@ function Board() {
           {tile.map((row, i) => {
             return (
               <tr key={i}>
-                {/* <td className="guide">{letters[i].toUpperCase()}</td> */}
+                <td className="guide">{letters[i].toUpperCase()}</td>
                 {row.map((data, i) => {
                   return <Tile key={i} tileID={data} />;
                 })}
@@ -39,7 +39,7 @@ function Board() {
             );
           })}
         </tbody>
-        {/* <tfoot>
+        <tfoot>
           <tr>
             {Array.from(Array(9).keys()).map((num, i) => {
               return (
@@ -49,13 +49,13 @@ function Board() {
               );
             })}
           </tr>
-        </tfoot> */}
+        </tfoot>
       </table>
       <div className="black-deads">
         {deadPieces
           .filter(({ color }) => color === "black")
-          .map((piece) => {
-            return <Dead {...piece} />;
+          .map((piece, i) => {
+            return <Dead key={i} {...piece} />;
           })}
       </div>
     </div>

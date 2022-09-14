@@ -11,7 +11,11 @@ import { reducerType, StorePropType } from "../types/types";
 
 export function reducer(state: StorePropType, action: reducerType) {
   if (action.type === SELECT_PIECE) {
-    return { ...state, selectedPiece: action.payload };
+    return {
+      ...state,
+      selectedPiece: action.payload[0],
+      allValidMoves: action.payload[1],
+    };
   }
   if (action.type === KILL_PIECE) {
     return { ...state, deadPieces: [...state.deadPieces, action.payload] };
@@ -22,6 +26,7 @@ export function reducer(state: StorePropType, action: reducerType) {
       livePieces: action.payload[0],
       current: action.payload[1],
       selectedPiece: null,
+      allValidMoves: [],
     };
   }
   if (action.type === PROMOTE_PAWN) {

@@ -1,87 +1,59 @@
-import { KILL_PIECE, MOVE_PIECE, OPEN_MODAL } from "../../actions/actions";
 import getposition from "./getposition";
 import attack from "./attack";
 import { MoveType } from "../../types/types";
+import { checkTile } from "../../helper/checkTile";
 
 export default ({
-  selectedPiece,
+  selected: { position, color },
   livePieces,
-  tileID,
-  ValidMoves,
-  position,
-  dispatch,
-  tileContent,
-  opposite,
+  Dir,
 }: MoveType) => {
-  let pieceDirection;
-  const verticalDirection = "abcdefgh";
+  const AllValidMoves: string[] = [];
 
-  if (selectedPiece.color === "white") {
-    pieceDirection = verticalDirection.split("").reverse();
+  const isStarting = Dir.indexOf(position.charAt(0)) === 1;
+
+  const frontMove = getposition(Dir, position, 1);
+
+  const hasPiece1 = checkTile(livePieces, frontMove);
+
+  if (!hasPiece1) {
+    AllValidMoves.push(frontMove);
   } else {
-    pieceDirection = verticalDirection.split("");
+    AllValidMoves.push("xx");
   }
 
-  if (ValidMoves[1]) {
-    const rightDirection = [
-      getposition(pieceDirection, position, 1),
-      getposition(pieceDirection, position, 2),
-    ];
+  const TwoForward = getposition(Dir, position, 2);
 
-    if (pieceDirection.indexOf(position.charAt(0)) > 1) {
-      rightDirection.pop();
-    }
+  const hasPiece = checkTile(livePieces, TwoForward);
+  if (isStarting && !hasPiece && !hasPiece1) {
+    AllValidMoves.push(TwoForward);
+  } else {
+    AllValidMoves.push("xx");
+  }
 
-    if (rightDirection.includes(tileID)) {
-      const updatedPiecesPositions = livePieces.map((piece) => {
-        if (piece.id === selectedPiece.id) {
-          return { ...piece, position: tileID };
-        } else {
-          return piece;
-        }
-      });
+  const leftMove = attack(Dir, position, "-1");
+  const rightMove = attack(Dir, position, "+1");
 
-      dispatch({
-        type: MOVE_PIECE,
-        payload: [updatedPiecesPositions, opposite],
-      });
-    }
-  } else if (ValidMoves[0]) {
-    const validAttack = [
-      attack(pieceDirection, position, "+1"),
-      attack(pieceDirection, position, "-1"),
-    ];
+  const pieceInLeft = checkTile(livePieces, leftMove);
+  const pieceInRight = checkTile(livePieces, rightMove);
 
-    if (validAttack.includes(tileContent!.position)) {
-      let updatedPiecesPositions = livePieces;
-      const hasPiece = livePieces.find(({ position }) => tileID === position);
-
-      if (hasPiece) {
-        dispatch({ type: KILL_PIECE, payload: hasPiece });
-        updatedPiecesPositions = livePieces.filter(
-          ({ position }) => tileID !== position
-        );
-      }
-
-      updatedPiecesPositions = updatedPiecesPositions.map((piece) => {
-        if (piece.id === selectedPiece.id) {
-          return { ...piece, position: tileID };
-        } else {
-          return piece;
-        }
-      });
-
-      if (
-        position.charAt(0) === pieceDirection[pieceDirection.length - 2] &&
-        tileID.charAt(0) === pieceDirection[pieceDirection.length - 1]
-      ) {
-        dispatch({ type: OPEN_MODAL });
-      }
-
-      dispatch({
-        type: MOVE_PIECE,
-        payload: [updatedPiecesPositions, opposite],
-      });
+  if (pieceInLeft && pieceInLeft.color !== color) {
+    const isInBoard = +leftMove.charAt(1) <= 8;
+    if (isInBoard) {
+      AllValidMoves.push(leftMove);
+    } else {
+      AllValidMoves.push("xx");
     }
   }
+
+  if (pieceInRight && pieceInRight.color !== color) {
+    const isInBoard = +rightMove.charAt(1) >= 1;
+    if (isInBoard) {
+      AllValidMoves.push(rightMove);
+    } else {
+      AllValidMoves.push("xx");
+    }
+  }
+
+  return AllValidMoves;
 };

@@ -2,17 +2,17 @@ import { PiecePropType } from "../types/types";
 
 export const official: PiecePropType[] = [
   {
-    id: 17,
-    name: "queen",
+    id: 32,
+    name: "rook",
     color: "black",
-    position: "a4",
+    position: "a1",
     isOut: false,
   },
   {
-    id: 18,
-    name: "queen",
-    color: "white",
-    position: "h4",
+    id: 31,
+    name: "rook",
+    color: "black",
+    position: "a8",
     isOut: false,
   },
   {
@@ -100,17 +100,17 @@ export const official: PiecePropType[] = [
     isOut: false,
   },
   {
-    id: 31,
-    name: "rook",
+    id: 17,
+    name: "queen",
     color: "black",
-    position: "a8",
+    position: "a4",
     isOut: false,
   },
   {
-    id: 32,
-    name: "rook",
-    color: "black",
-    position: "a1",
+    id: 18,
+    name: "queen",
+    color: "white",
+    position: "h4",
     isOut: false,
   },
 ];

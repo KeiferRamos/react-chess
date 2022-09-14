@@ -16,6 +16,11 @@ export type StorePropType = {
   deadPieces: PiecePropType[];
   current: ColorType["color"];
   isPawnPromoted: Boolean;
+  allValidMoves: string[];
+};
+
+export type directionType = {
+  type: "top" | "bot" | "left" | "right";
 };
 
 type MoveActionType = {
@@ -24,7 +29,12 @@ type MoveActionType = {
 };
 
 type SelectActionType = {
-  type: "SELECT_PIECE" | "KILL_PIECE";
+  type: "SELECT_PIECE";
+  payload: [PiecePropType, string[]];
+};
+
+type KillActionType = {
+  type: "KILL_PIECE";
   payload: PiecePropType;
 };
 
@@ -42,7 +52,8 @@ export type reducerType =
   | MoveActionType
   | SelectActionType
   | ModalType
-  | PromotePawnType;
+  | PromotePawnType
+  | KillActionType;
 
 export type moveHandlerType = {
   selectedPiece: PiecePropType | null;
@@ -53,13 +64,14 @@ export type moveHandlerType = {
 };
 
 export type MoveType = {
-  position: string;
-  color: ColorType["color"];
   livePieces: PiecePropType[];
-  tileID: string;
+  selected: PiecePropType;
+  Dir: string[];
+};
+
+export type SelectFunctionType = {
+  selected: PiecePropType;
+  allMoves: any;
+  livePieces: PiecePropType[];
   dispatch: (value: reducerType) => void;
-  selectedPiece: PiecePropType;
-  opposite: ColorType["color"];
-  tileContent: PiecePropType | null;
-  ValidMoves: Boolean[];
 };

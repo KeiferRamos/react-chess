@@ -1,58 +1,45 @@
-import { KILL_PIECE, MOVE_PIECE } from "../../actions/actions";
-import { MoveType } from "../../types/types";
-import { getPosition } from "./getPosition";
+import { ColorType, PiecePropType } from "../../types/types";
 
-export const BishopMove = ({
-  position,
-  color,
-  livePieces,
-  opposite,
-  tileID,
-  selectedPiece,
-  dispatch,
-}: MoveType) => {
-  const AllBishopMoves = [];
+export const getPosition = (
+  Dir: string[],
+  current: string,
+  livePieces: PiecePropType[],
+  color: ColorType["color"],
+  type: "left" | "right" | "bot-right" | "bot-left"
+) => {
+  const MovesArray = [];
+  while (true) {
+    const index = Dir.indexOf(current.charAt(0));
+    const firstChar = type.includes("bot") ? Dir[index - 1] : Dir[index + 1];
+    const secondChar = type.includes("left")
+      ? +current.charAt(1) - 1
+      : +current.charAt(1) + 1;
 
-  const letters = "abcdefgh";
-
-  const Dir =
-    color === "white" ? letters.split("").reverse() : letters.split("");
-
-  let current = position;
-
-  let left = getPosition(Dir, current, livePieces, opposite, "left");
-  let right = getPosition(Dir, current, livePieces, opposite, "right");
-  let BottomRight = getPosition(
-    Dir,
-    current,
-    livePieces,
-    opposite,
-    "bot-right"
-  );
-  let BottomLeft = getPosition(Dir, current, livePieces, opposite, "bot-left");
-
-  AllBishopMoves.push(...left, ...right, ...BottomRight, ...BottomLeft);
-
-  if (AllBishopMoves.includes(tileID)) {
-    let updatedPieces = livePieces;
-    const hasPiece = livePieces.find(({ position }) => position === tileID);
-
-    if (hasPiece) {
-      dispatch({ type: KILL_PIECE, payload: hasPiece });
-      updatedPieces = updatedPieces.filter(({ position }) => {
-        return position !== tileID;
-      });
+    if (type.includes("right") && secondChar > 8) {
+      break;
+    } else if (type.includes("right") && secondChar < 1) {
+      break;
     }
+    if (!firstChar) {
+      break;
+    } else {
+      const nextTile = `${firstChar}${secondChar}`;
 
-    updatedPieces = updatedPieces.map((piece) => {
-      if (piece.id === selectedPiece.id) {
-        return { ...piece, position: tileID };
+      const hasPiece = livePieces.find(({ position }) => nextTile === position);
+
+      if (hasPiece) {
+        if (hasPiece.color !== color) {
+          MovesArray.push(nextTile);
+          break;
+        } else {
+          break;
+        }
       }
-      return piece;
-    });
 
-    dispatch({ type: MOVE_PIECE, payload: [updatedPieces, opposite] });
-
-    return AllBishopMoves;
+      MovesArray.push(nextTile);
+      current = nextTile;
+    }
   }
+
+  return MovesArray;
 };

@@ -1,38 +1,36 @@
-import { KILL_PIECE, MOVE_PIECE } from "../../actions/actions";
 import { MoveType } from "../../types/types";
-import { getPosition } from "./getPosition";
 
 export const KingMove = ({
-  color,
-  position,
+  selected: { position, color },
   livePieces,
-  tileID,
-  dispatch,
-  selectedPiece,
-  opposite,
+  Dir,
 }: MoveType) => {
-  const AllValidMoves = getPosition(color, position, livePieces);
+  let validKingMoves = [];
 
-  if (AllValidMoves.includes(tileID)) {
-    let updatedPositions = livePieces;
+  //side moves
+  validKingMoves.push(`${position.charAt(0)}${+position.charAt(1) - 1}`);
 
-    const hasPiece = livePieces.find(({ position }) => tileID === position);
+  validKingMoves.push(`${position.charAt(0)}${+position.charAt(1) + 1}`);
 
-    if (hasPiece) {
-      dispatch({ type: KILL_PIECE, payload: hasPiece });
-      updatedPositions = updatedPositions.filter(
-        ({ id }) => id !== hasPiece.id
-      );
-    }
+  const forwardMove = Dir[Dir.indexOf(position.charAt(0)) + 1];
+  const backwardMove = Dir[Dir.indexOf(position.charAt(0)) - 1];
 
-    updatedPositions = updatedPositions.map((piece) => {
-      if (piece.id === selectedPiece.id) {
-        return { ...piece, position: tileID };
-      } else {
-        return piece;
-      }
-    });
+  //forward move
+  validKingMoves.push(`${forwardMove}${+position.charAt(1) + 1}`);
+  validKingMoves.push(`${forwardMove}${+position.charAt(1) - 1}`);
+  validKingMoves.push(`${forwardMove}${position.charAt(1)}`);
 
-    dispatch({ type: MOVE_PIECE, payload: [updatedPositions, opposite] });
-  }
+  //backward move
+
+  validKingMoves.push(`${backwardMove}${+position.charAt(1) + 1}`);
+  validKingMoves.push(`${backwardMove}${+position.charAt(1) - 1}`);
+  validKingMoves.push(`${backwardMove}${position.charAt(1)}`);
+
+  validKingMoves = validKingMoves.filter((moves) => {
+    const isSameColor =
+      livePieces.find(({ position }) => position === moves)?.color !== color;
+    return isSameColor;
+  });
+
+  return validKingMoves;
 };

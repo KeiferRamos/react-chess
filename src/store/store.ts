@@ -7,4 +7,5 @@ export const store: StorePropType = {
   deadPieces: [],
   current: "white",
   isPawnPromoted: false,
+  allValidMoves: [],
 };
