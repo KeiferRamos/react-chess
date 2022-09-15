@@ -17,6 +17,7 @@ export type StorePropType = {
   current: ColorType["color"];
   isPawnPromoted: Boolean;
   allValidMoves: string[];
+  isCheckmate: boolean;
 };
 
 export type directionType = {
@@ -39,7 +40,7 @@ type KillActionType = {
 };
 
 type ModalType = {
-  type: "CLOSE_MODAL" | "OPEN_MODAL";
+  type: "CLOSE_MODAL" | "OPEN_MODAL" | "CHECK_MATE" | "PLAY_AGAIN";
   payload?: never;
 };
 
@@ -73,5 +74,12 @@ export type SelectFunctionType = {
   selected: PiecePropType;
   allMoves: any;
   livePieces: PiecePropType[];
+};
+
+export type MoveFunctionType = {
+  livePieces: PiecePropType[];
+  tileID: string;
+  selectedPiece: PiecePropType;
   dispatch: (value: reducerType) => void;
+  allMoves: any;
 };

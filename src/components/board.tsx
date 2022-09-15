@@ -22,6 +22,9 @@ function Board() {
       <div className="white-deads">
         {deadPieces
           .filter(({ color }) => color === "white")
+          .sort((a, b) => {
+            return a.id - b.id;
+          })
           .map((piece, i) => {
             return <Dead key={i} {...piece} />;
           })}
@@ -54,6 +57,9 @@ function Board() {
       <div className="black-deads">
         {deadPieces
           .filter(({ color }) => color === "black")
+          .sort((a, b) => {
+            return a.id - b.id;
+          })
           .map((piece, i) => {
             return <Dead key={i} {...piece} />;
           })}

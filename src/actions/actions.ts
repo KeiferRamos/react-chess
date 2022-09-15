@@ -4,6 +4,8 @@ const CLOSE_MODAL = "CLOSE_MODAL";
 const OPEN_MODAL = "OPEN_MODAL";
 const PROMOTE_PAWN = "PROMOTE_PAWN";
 const KILL_PIECE = "KILL_PIECE";
+const CHECK_MATE = "CHECK_MATE";
+const PLAY_AGAIN = "PLAY_AGAIN";
 
 export {
   MOVE_PIECE,
@@ -12,4 +14,6 @@ export {
   OPEN_MODAL,
   PROMOTE_PAWN,
   KILL_PIECE,
+  CHECK_MATE,
+  PLAY_AGAIN,
 };

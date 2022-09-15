@@ -1,17 +1,12 @@
 import { getDirection } from "../helper/direction";
-import { SELECT_PIECE } from "../actions/actions";
 import { SelectFunctionType } from "../types/types";
 import { checkTile } from "../helper/checkTile";
-import getOpponent from "./opponentMoves";
+import getOpponent from "./opponent";
 import { createTable } from "../helper/createTable";
 import { updateBoard } from "../helper/update";
+import { filterPieces } from "../helper/filterPieces";
 
-export default ({
-  selected,
-  allMoves,
-  livePieces,
-  dispatch,
-}: SelectFunctionType) => {
+export default ({ selected, allMoves, livePieces }: SelectFunctionType) => {
   const currentSelected = selected.name as keyof typeof allMoves;
   const directions = getDirection(selected.color);
 
@@ -21,9 +16,7 @@ export default ({
     Dir: directions,
   });
 
-  const opponentPieces = livePieces.filter(
-    ({ color }) => color !== selected.color
-  );
+  const opponentPieces = filterPieces(livePieces, selected);
 
   const currentKing = livePieces.find(
     ({ name, color }) => name === "king" && color === selected.color
@@ -41,11 +34,11 @@ export default ({
     if (selected.name === "king") {
       const hasPieceInRight = checkTile(livePieces, validMoves[2]);
 
-      if (hasPieceInRight) {
+      if (hasPieceInRight && hasPieceInRight.name === "pawn") {
         validMoves[1] = "xx";
       }
       const hasPieceInLeft = checkTile(livePieces, validMoves[3]);
-      if (hasPieceInLeft) {
+      if (hasPieceInLeft && hasPieceInLeft.name === "pawn") {
         validMoves[0] = "xx";
       }
       validMoves = validMoves.filter((move) => !opponent[0].includes(move));
@@ -88,6 +81,7 @@ export default ({
       if (checkKill && opponent[1].length <= 1) {
         isKillable = true;
       }
+
       const isInMoves = validMoves.filter((piece) =>
         opponent[0].includes(piece)
       );
@@ -97,7 +91,9 @@ export default ({
         isInMoves.forEach((move) => {
           let newPieces = updateBoard(livePieces, move, selected);
 
-          const newOpponent = getOpponent(opponentPieces, allMoves, newPieces);
+          const filtered = filterPieces(newPieces, selected);
+
+          const newOpponent = getOpponent(filtered, allMoves, newPieces);
 
           if (newOpponent[0].includes(currentKing.position)) {
             return;
@@ -116,12 +112,15 @@ export default ({
   } else {
     for (var i = 0; i < validMoves.length; i++) {
       const update = updateBoard(livePieces, validMoves[i], selected);
-      const newOpponent = getOpponent(opponentPieces, allMoves, update);
+
+      const filtered = filterPieces(update, selected);
+
+      const newOpponent = getOpponent(filtered, allMoves, update);
       if (newOpponent[1].length > 0) {
         validMoves[i] = "xxx";
       }
     }
   }
 
-  dispatch({ type: SELECT_PIECE, payload: [selected, validMoves] });
+  return validMoves;
 };

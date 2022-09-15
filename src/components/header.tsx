@@ -3,13 +3,13 @@ import { ContextProvider } from "../context/globalcontext";
 
 function Header() {
   const {
-    state: { current },
+    state: { current, isCheckmate },
   } = useContext(ContextProvider);
 
   return (
     <header>
       <h1 style={{ textAlign: "center", marginBottom: "10px", color: "white" }}>
-        {current.toUpperCase()} TURN!
+        {isCheckmate ? "CHECKMATE!" : `${current.toUpperCase()} TURN!`}
       </h1>
     </header>
   );

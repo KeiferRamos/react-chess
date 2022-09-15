@@ -10,17 +10,23 @@ import {
 import { useState, useEffect, useContext } from "react";
 import { MoveType, PiecePropType } from "../types/types";
 import { ContextProvider } from "../context/globalcontext";
-import { KILL_PIECE, MOVE_PIECE, SELECT_PIECE } from "../actions/actions";
+import {
+  CHECK_MATE,
+  KILL_PIECE,
+  MOVE_PIECE,
+  OPEN_MODAL,
+  SELECT_PIECE,
+} from "../actions/actions";
 import PawnMove from "../pieces/pawn/index";
 import { RookMove } from "../pieces/rook";
 import { KnightMove } from "../pieces/knight";
 import { BishopMove } from "../pieces/bishop";
 import { QueenMove } from "../pieces/queen/moves";
 import { KingMove } from "../pieces/king";
-import { checkTile } from "../helper/checkTile";
-import { validateMove } from "../helper/validate";
-import { getDirection } from "../helper/direction";
 import select from "../functions/select";
+import { createTable } from "../helper/createTable";
+import { getDirection } from "../helper/direction";
+import { movePiece } from "../functions/move";
 
 export const pieces = {
   pawn: <FaChessPawn />,
@@ -58,30 +64,11 @@ function Tile({ tileID }: { tileID: string }) {
     };
 
     if (selectedPiece && allValidMoves.includes(tileID)) {
-      const hasPiece = livePieces.find(({ position }) => position === tileID);
-
-      const opposite = selectedPiece.color === "white" ? "black" : "white";
-
-      let update = livePieces;
-      if (hasPiece) {
-        update = update.filter(
-          ({ position }) => hasPiece.position !== position
-        );
-        dispatch({ type: KILL_PIECE, payload: hasPiece });
-      }
-
-      update = update.map((piece) => {
-        if (piece.id === selectedPiece.id) {
-          return { ...piece, position: tileID };
-        } else {
-          return piece;
-        }
-      });
-
-      dispatch({ type: MOVE_PIECE, payload: [update, opposite] });
+      movePiece({ livePieces, tileID, selectedPiece, dispatch, allMoves });
     }
     if (selected && selected.color === current) {
-      select({ selected, allMoves, livePieces, dispatch });
+      const validMoves = select({ selected, allMoves, livePieces });
+      dispatch({ type: SELECT_PIECE, payload: [selected, validMoves] });
     }
   };
 
