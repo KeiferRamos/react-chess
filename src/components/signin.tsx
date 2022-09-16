@@ -28,7 +28,8 @@ function SignIn() {
 
   useEffect(() => {
     if (message.user) {
-      nav("/react-chess/Game");
+      localStorage.setItem("username", message.user.username);
+      nav("/react-chess/rooms");
     }
   }, [message]);
 

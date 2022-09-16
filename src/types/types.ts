@@ -91,8 +91,17 @@ export type UserInputType = {
   confirm?: string;
 };
 
+export type CreateInputType = {
+  name: string;
+  password: string;
+};
+
+export type PasswordInputType = {
+  password: string;
+};
+
 export type InputType = {
-  inputs: UserInputType;
+  inputs: UserInputType | CreateInputType | string;
   item: string;
   updateInputs: (e: React.ChangeEvent, item: string) => void;
 };
@@ -105,4 +114,11 @@ export type MessageType = {
 
 export type LoginQueryType = {
   query: "login" | "register";
+};
+
+export type RoomType = {
+  creator: string;
+  name: string;
+  password: string;
+  id: number;
 };

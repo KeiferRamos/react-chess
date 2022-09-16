@@ -8,3 +8,11 @@ export const CREATE_USER = gql`
     }
   }
 `;
+
+export const CREATE_ROOM = gql`
+  mutation ($input: CreateRoom!) {
+    createRoom(input: $input) {
+      message
+    }
+  }
+`;

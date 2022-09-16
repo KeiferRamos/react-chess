@@ -9,18 +9,7 @@ function Input({ inputs, item, updateInputs }: InputType) {
     setHasShow(!hasShow);
   };
 
-  if (item === "username") {
-    return (
-      <div className="input-container">
-        <input
-          value={inputs[item as keyof typeof inputs]}
-          type="text"
-          placeholder={item}
-          onChange={(e) => updateInputs(e, item)}
-        />
-      </div>
-    );
-  } else {
+  if (item === "password" || item === "confirm") {
     return (
       <div className="input-container">
         <input
@@ -36,6 +25,17 @@ function Input({ inputs, item, updateInputs }: InputType) {
             <FiEye onClick={() => togglePassword()} />
           )}
         </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="input-container">
+        <input
+          value={inputs[item as keyof typeof inputs]}
+          type="text"
+          placeholder={item}
+          onChange={(e) => updateInputs(e, item)}
+        />
       </div>
     );
   }

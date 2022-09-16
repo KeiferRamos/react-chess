@@ -145,11 +145,89 @@ button {
   height: 100%;
 }
 
+.rooms > header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rooms header > h1 {
+  margin-right: auto;
+}
+
+.rooms-container,
+.creators-room {
+  border: 1px solid #bebebe;
+  width: 500px;
+  height: 500px;
+  position: relative;
+  margin-top: 10px;
+  padding: 5px;
+  overflow: scroll;
+}
+
+.creators-room {
+  padding: 10px 50px;
+}
+
+.color-options {
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.select-color {
+  flex: 1;
+  font-size: 50px;
+  background-color: #82454e;
+  border: 1px solid;
+}
+
+.room {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #bebebe;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.room > img {
+  height: 100%;
+  background: #82454e;
+}
+
+.join-btn {
+  margin-left: auto;
+}
+
+.modal-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .nav-btn {
   text-decoration: underline;
   color: #82454e;
   margin-left: 5px;
   cursor: pointer;
+}
+
+.join-room > input {
+  width: 100%;
+  height: 40px;
+  border: 1.5px solid #bebebe;
+  outline: none;
+  padding: 5px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 @media (max-width: 500px) {
