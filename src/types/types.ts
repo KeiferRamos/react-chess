@@ -18,6 +18,7 @@ export type StorePropType = {
   isPawnPromoted: Boolean;
   allValidMoves: string[];
   isCheckmate: boolean;
+  isUserLoggedIn: boolean;
 };
 
 export type directionType = {
@@ -82,4 +83,26 @@ export type MoveFunctionType = {
   selectedPiece: PiecePropType;
   dispatch: (value: reducerType) => void;
   allMoves: any;
+};
+
+export type UserInputType = {
+  username: string;
+  password: string;
+  confirm?: string;
+};
+
+export type InputType = {
+  inputs: UserInputType;
+  item: string;
+  updateInputs: (e: React.ChangeEvent, item: string) => void;
+};
+
+export type MessageType = {
+  message: string;
+  success: boolean;
+  user?: { username: string; password: string };
+};
+
+export type LoginQueryType = {
+  query: "login" | "register";
 };

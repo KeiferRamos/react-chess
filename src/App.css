@@ -12,11 +12,11 @@ body {
   width: 100%;
   display: grid;
   place-items: center;
-  background: #5d6164;
+  background: #e0e0e0;
 }
 
 table {
-  border: 5px solid #bebebe;
+  border: 5px solid #82454e;
   border-collapse: collapse;
 }
 
@@ -69,7 +69,7 @@ li:hover {
   border-radius: 4px;
 }
 
-.modal-content div > button {
+button {
   padding: 5px 10px;
   margin: 10px 5px 0 0;
   font-weight: bolder;
@@ -101,6 +101,55 @@ li:hover {
 .black-deads {
   left: 0;
   bottom: 0;
+}
+
+.login {
+  width: 330px;
+  padding: 20px 30px 15px 30px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 5px;
+  background: #e0e0e0;
+  box-shadow: 5px 5px 4px #c3c3c3, -5px -5px 4px #fdfdfd;
+}
+
+.login > h2 {
+  margin-bottom: 20px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.input-container {
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-container > input {
+  width: 100%;
+  height: 40px;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0 5px;
+  border-bottom: 1px solid #bebebe;
+}
+
+.input-container > div {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+
+.nav-btn {
+  text-decoration: underline;
+  color: #82454e;
+  margin-left: 5px;
+  cursor: pointer;
 }
 
 @media (max-width: 500px) {

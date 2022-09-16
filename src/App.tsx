@@ -1,24 +1,19 @@
-import Board from "./components/board";
 import "./App.css";
-import Modal from "./components/modal";
-import { useContext } from "react";
-import { ContextProvider } from "./context/globalcontext";
-import Header from "./components/header";
-import Promoted from "./components/promoted";
-import EndGame from "./components/checkmate";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import RoutesPage from "./routes";
 
 function App() {
-  const {
-    state: { isPawnPromoted, isCheckmate },
-  } = useContext(ContextProvider);
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: "http://localhost:4000/graphql",
+  });
 
   return (
-    <div className="App">
-      <Header />
-      <Board />
-      {isPawnPromoted && <Modal children={<Promoted />} />}
-      {isCheckmate && <Modal children={<EndGame />} />}
-    </div>
+    <ApolloProvider client={client}>
+      <div className="App">
+        <RoutesPage />
+      </div>
+    </ApolloProvider>
   );
 }
 

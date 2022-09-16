@@ -9,6 +9,7 @@ export const currentState: StorePropType = {
   isPawnPromoted: false,
   allValidMoves: [],
   isCheckmate: false,
+  isUserLoggedIn: false,
 };
 
 export const store: StorePropType = currentState;
