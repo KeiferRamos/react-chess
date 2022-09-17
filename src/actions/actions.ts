@@ -6,6 +6,8 @@ const PROMOTE_PAWN = "PROMOTE_PAWN";
 const KILL_PIECE = "KILL_PIECE";
 const CHECK_MATE = "CHECK_MATE";
 const PLAY_AGAIN = "PLAY_AGAIN";
+const TURN_BACK = "TURN_BACK";
+const CANCEL_BACK = "CANCEL_BACK";
 
 export {
   MOVE_PIECE,
@@ -16,4 +18,6 @@ export {
   KILL_PIECE,
   CHECK_MATE,
   PLAY_AGAIN,
+  TURN_BACK,
+  CANCEL_BACK,
 };

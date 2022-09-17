@@ -3,7 +3,7 @@ import { RoomType } from "../types/types";
 import Modal from "./modal";
 import Room from "./room";
 import Input from "./input";
-import { useNavigate } from "react-router";
+import { useNavigate, redirect } from "react-router";
 
 type PropType = {
   rooms: RoomType[];
@@ -12,6 +12,7 @@ type PropType = {
 function Join({ rooms }: PropType) {
   const nav = useNavigate();
   const [isJoining, setIsJoining] = useState(false);
+  const [message, setMessage] = useState("Please enter room password");
   const [password, setPassword] = useState("");
   const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
 
@@ -30,8 +31,14 @@ function Join({ rooms }: PropType) {
   };
 
   const validateUser = () => {
-    if (password === selectedRoom!.password) {
-      nav("/react-chess/game");
+    if (password) {
+      if (password === selectedRoom!.password) {
+        nav("/react-chess/game");
+      } else {
+        setMessage("incorrect password!");
+      }
+    } else {
+      setMessage("Please enter room password");
     }
   };
 
@@ -46,11 +53,17 @@ function Join({ rooms }: PropType) {
         <Modal
           children={
             <div className="join-room">
-              <p>Please enter room password</p>
+              <p>{message}</p>
               <Input {...args} />
-              <br />
               <button onClick={() => validateUser()}>join room</button>
-              <button>cancel join</button>
+              <button
+                onClick={() => {
+                  setSelectedRoom(null);
+                  setIsJoining(false);
+                }}
+              >
+                cancel join
+              </button>
             </div>
           }
         />

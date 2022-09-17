@@ -19,6 +19,7 @@ export type StorePropType = {
   allValidMoves: string[];
   isCheckmate: boolean;
   isUserLoggedIn: boolean;
+  isTurningBack: Boolean;
 };
 
 export type directionType = {
@@ -41,7 +42,13 @@ type KillActionType = {
 };
 
 type ModalType = {
-  type: "CLOSE_MODAL" | "OPEN_MODAL" | "CHECK_MATE" | "PLAY_AGAIN";
+  type:
+    | "CLOSE_MODAL"
+    | "OPEN_MODAL"
+    | "CHECK_MATE"
+    | "PLAY_AGAIN"
+    | "TURN_BACK"
+    | "CANCEL_BACK";
   payload?: never;
 };
 

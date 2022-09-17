@@ -4,8 +4,9 @@ import { FaChessPawn } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { CREATE_ROOM } from "../graphql/mutation";
 import Input from "./input";
+import { MessageType } from "../types/types";
 
-function Create() {
+function Create({ refetch }: any) {
   const nav = useNavigate();
   const initialValue = {
     name: "",
@@ -15,7 +16,10 @@ function Create() {
   const [create, { data }] = useMutation(CREATE_ROOM);
 
   const [inputs, setInputs] = useState(initialValue);
-  const [message, setMessage] = useState("create room here!");
+  const [message, setMessage] = useState<MessageType>({
+    message: "create room here!",
+    success: false,
+  });
   const [selected, setSelected] = useState<string | null>(null);
 
   const updateInputs = (e: React.ChangeEvent, item: string) => {
@@ -23,20 +27,29 @@ function Create() {
   };
 
   const createRoom = () => {
-    const creator = localStorage.getItem("username")!;
-    create({ variables: { input: { selected, creator, ...inputs } } });
-    nav("/react-chess/game");
+    if (message) {
+      const creator = localStorage.getItem("username")!;
+      create({ variables: { input: { selected, creator, ...inputs } } });
+      refetch();
+    }
   };
 
   useEffect(() => {
+    if (message.success) {
+      localStorage.setItem("room", JSON.stringify({ roomName: inputs.name }));
+      nav("/react-chess/game");
+    }
+  }, [message]);
+
+  useEffect(() => {
     if (data) {
-      setMessage(data.createRoom.message);
+      setMessage(data.createRoom);
     }
   }, [data]);
 
   return (
     <div className="creators-room">
-      <h2 style={{ textAlign: "center", margin: "15px" }}>{message}</h2>
+      <h2 style={{ textAlign: "center", margin: "15px" }}>{message.message}</h2>
       <div className="color-options">
         {["black", "white"].map((color, i) => {
           return (

@@ -10,6 +10,7 @@ export const currentState: StorePropType = {
   allValidMoves: [],
   isCheckmate: false,
   isUserLoggedIn: false,
+  isTurningBack: false,
 };
 
 export const store: StorePropType = currentState;

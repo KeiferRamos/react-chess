@@ -8,7 +8,7 @@ import Create from "../components/create";
 function Rooms() {
   const [rooms, setRooms] = useState<RoomType[]>([]);
   const [isJoining, setIsJoining] = useState(true);
-  const { data } = useQuery(GET_ROOMS);
+  const { data, refetch } = useQuery(GET_ROOMS);
 
   useEffect(() => {
     if (data) {
@@ -42,7 +42,11 @@ function Rooms() {
           </button>
         )}
       </header>
-      {rooms.length > 0 && isJoining ? <Join rooms={rooms} /> : <Create />}
+      {rooms.length > 0 && isJoining ? (
+        <Join rooms={rooms} />
+      ) : (
+        <Create refetch={refetch} />
+      )}
     </div>
   );
 }

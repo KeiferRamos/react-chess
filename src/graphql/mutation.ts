@@ -13,6 +13,15 @@ export const CREATE_ROOM = gql`
   mutation ($input: CreateRoom!) {
     createRoom(input: $input) {
       message
+      success
+    }
+  }
+`;
+
+export const REMOVE_ROOM = gql`
+  mutation ($name: String!) {
+    removeRoom(name: $name) {
+      message
     }
   }
 `;

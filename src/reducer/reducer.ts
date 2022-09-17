@@ -1,4 +1,5 @@
 import {
+  CANCEL_BACK,
   CHECK_MATE,
   CLOSE_MODAL,
   KILL_PIECE,
@@ -7,6 +8,7 @@ import {
   PLAY_AGAIN,
   PROMOTE_PAWN,
   SELECT_PIECE,
+  TURN_BACK,
 } from "../actions/actions";
 import { currentState } from "../store/store";
 
@@ -37,6 +39,12 @@ export function reducer(state: StorePropType, action: reducerType) {
   }
   if (action.type === PLAY_AGAIN) {
     return currentState;
+  }
+  if (action.type === TURN_BACK) {
+    return { ...state, isTurningBack: true };
+  }
+  if (action.type === CANCEL_BACK) {
+    return { ...state, isTurningBack: false };
   }
   if (action.type === CLOSE_MODAL) {
     return { ...state, isPawnPromoted: false };

@@ -1,4 +1,3 @@
-import React from "react";
 import { RoomType } from "../types/types";
 
 type PropType = RoomType & {
