@@ -11,10 +11,13 @@ function Rooms() {
   const { data, refetch } = useQuery(GET_ROOMS);
 
   useEffect(() => {
+    refetch();
     if (data) {
       const { rooms } = data.rooms;
       if (rooms) {
         setRooms(rooms);
+      } else {
+        setRooms([]);
       }
     }
   }, [data]);

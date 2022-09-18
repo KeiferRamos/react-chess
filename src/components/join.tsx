@@ -3,7 +3,7 @@ import { RoomType } from "../types/types";
 import Modal from "./modal";
 import Room from "./room";
 import Input from "./input";
-import { useNavigate, redirect } from "react-router";
+import { useNavigate } from "react-router";
 
 type PropType = {
   rooms: RoomType[];
@@ -33,6 +33,10 @@ function Join({ rooms }: PropType) {
   const validateUser = () => {
     if (password) {
       if (password === selectedRoom!.password) {
+        localStorage.setItem(
+          "room",
+          JSON.stringify({ roomName: selectedRoom!.name })
+        );
         nav("/react-chess/game");
       } else {
         setMessage("incorrect password!");

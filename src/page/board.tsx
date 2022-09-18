@@ -5,7 +5,7 @@ import Modal from "../components/modal";
 import Promoted from "../components/promoted";
 import EndGame from "../components/checkmate";
 import { ContextProvider } from "../context/globalcontext";
-import { TURN_BACK } from "../actions/actions";
+import { CANCEL_BACK, TURN_BACK } from "../actions/actions";
 import RemoveRoom from "../components/removeRoom";
 import { useNavigate } from "react-router";
 
@@ -17,14 +17,18 @@ function Game() {
   const nav = useNavigate();
 
   useEffect(() => {
-    function eventHandler(e: Event) {
+    function eventHandler() {
       nav(1);
       dispatch({ type: TURN_BACK });
     }
 
-    window.addEventListener("popstate", (e) => eventHandler(e));
+    window.addEventListener("popstate", () => eventHandler());
 
-    return () => window.removeEventListener("popstate", (e) => eventHandler(e));
+    return () => window.removeEventListener("popstate", () => eventHandler());
+  }, []);
+
+  useEffect(() => {
+    dispatch({ type: CANCEL_BACK });
   }, []);
 
   useEffect(() => {

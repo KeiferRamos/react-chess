@@ -19,10 +19,9 @@ function RemoveRoom() {
 
   return (
     <div>
-      <p>
-        If you do this, There's no turning back. I mean this room will be
-        automatically removed. Are you sure you want to go back?
-      </p>
+      <p>If you do this, There's no turning back. I mean this room will be</p>
+      <p>automatically removed. Are you sure you want to go back?</p>
+      <br />
       <button onClick={() => confirmRemove()}>yes</button>
       <button onClick={() => dispatch({ type: CANCEL_BACK })}>cancel</button>
     </div>
