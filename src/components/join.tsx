@@ -1,48 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { RoomType } from "../types/types";
+import React, { useContext, useState } from "react";
+import { MessageType } from "../types/types";
 import Modal from "./modal";
 import Room from "./room";
 import Input from "./input";
 import { useNavigate } from "react-router";
+import { joinRoom } from "../api/room";
+import { RoomType } from "../types/types";
+import { socket } from "../index";
+import { ContextProvider } from "../context/globalcontext";
+import { SET_SELECTED } from "../actions/actions";
 
 type PropType = {
   rooms: RoomType[];
 };
 
 function Join({ rooms }: PropType) {
+  const { dispatch } = useContext(ContextProvider);
   const nav = useNavigate();
-  const [isJoining, setIsJoining] = useState(false);
-  const [message, setMessage] = useState("Please enter room password");
-  const [password, setPassword] = useState("");
-  const [selectedRoom, setSelectedRoom] = useState<RoomType | null>(null);
+  const [roomID, setRoomID] = useState<string | null>(null);
+  const [isFull, setIsFull] = useState(false);
+  const [message, setMessage] = useState<MessageType>({
+    message: "Please enter room password",
+    success: false,
+  });
 
-  const selectRoom = (room: RoomType) => {
-    setSelectedRoom(room);
-  };
-
-  useEffect(() => {
-    if (selectedRoom) {
-      setIsJoining(true);
-    }
-  }, [selectRoom]);
+  const [password, setPassword] = useState<string>("");
 
   const updateInputs = (e: React.ChangeEvent) => {
     setPassword((e.target as HTMLInputElement).value);
   };
 
   const validateUser = () => {
-    if (password) {
-      if (password === selectedRoom!.password) {
-        localStorage.setItem(
-          "room",
-          JSON.stringify({ roomName: selectedRoom!.name })
-        );
-        nav("/react-chess/game");
+    joinRoom(roomID!, password).then((data) => {
+      if (data.success) {
+        dispatch({ type: SET_SELECTED, payload: data.userSelected });
+        nav(`/react-chess/game/${roomID}`);
+        socket.emit("join_room");
       } else {
-        setMessage("incorrect password!");
+        setMessage(data);
       }
+    });
+  };
+
+  const join = (_id: string) => {
+    const room = rooms.find((room) => room._id === _id)!;
+    if (room.players.length === 2) {
+      setIsFull(true);
     } else {
-      setMessage("Please enter room password");
+      setRoomID(_id);
     }
   };
 
@@ -50,24 +55,31 @@ function Join({ rooms }: PropType) {
 
   return (
     <div className="rooms-container">
-      {rooms.map((room, i) => {
-        return <Room key={i} {...room} selectRoom={selectRoom} />;
-      })}
-      {isJoining && (
+      {rooms.length > 0 ? (
+        rooms.map((room, i) => {
+          return <Room key={i} {...room} join={join} />;
+        })
+      ) : (
+        <p className="modal-text">no rooms available</p>
+      )}
+      {isFull && (
+        <Modal
+          children={
+            <div>
+              <p>room is full</p>
+              <button onClick={() => setIsFull(false)}>ok</button>
+            </div>
+          }
+        />
+      )}
+      {roomID && (
         <Modal
           children={
             <div className="join-room">
-              <p>{message}</p>
+              <p>{message.message}</p>
               <Input {...args} />
               <button onClick={() => validateUser()}>join room</button>
-              <button
-                onClick={() => {
-                  setSelectedRoom(null);
-                  setIsJoining(false);
-                }}
-              >
-                cancel join
-              </button>
+              <button onClick={() => setRoomID(null)}>cancel join</button>
             </div>
           }
         />

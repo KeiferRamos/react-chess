@@ -1,25 +1,55 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Header from "../components/header";
 import Board from "../components/board";
 import Modal from "../components/modal";
 import Promoted from "../components/promoted";
 import EndGame from "../components/checkmate";
 import { ContextProvider } from "../context/globalcontext";
-import { CANCEL_BACK, TURN_BACK } from "../actions/actions";
-import RemoveRoom from "../components/removeRoom";
-import { useNavigate } from "react-router";
+import { useParams } from "react-router";
+import { findRoom, leaveRoom } from "../api/room";
+import { socket } from "../index";
+import { SET_BOARD, UPDATE_BOARD } from "../actions/actions";
+import { UpdatePayloadType } from "../types/types";
 
 function Game() {
+  const { _id } = useParams();
   const {
-    state: { isCheckmate, isPawnPromoted, isTurningBack },
+    state: { isCheckmate, isPawnPromoted },
     dispatch,
   } = useContext(ContextProvider);
-  const nav = useNavigate();
+  const [invalidID, setInvalidID] = useState(false);
+  const [errorMSG, setErrorMSG] = useState("");
+
+  useEffect(() => {
+    findRoom(_id).then((data) => {
+      if (data.success) {
+        const {
+          room: {
+            game: { livePieces, current },
+            players,
+          },
+        } = data;
+        setInvalidID(false);
+        dispatch({
+          type: SET_BOARD,
+          payload: [livePieces, current, _id],
+        });
+      } else {
+        setInvalidID(true);
+        setErrorMSG(data.message);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("view_board", (data: UpdatePayloadType) => {
+      dispatch({ type: UPDATE_BOARD, payload: data });
+    });
+  }, [socket]);
 
   useEffect(() => {
     function eventHandler() {
-      nav(1);
-      dispatch({ type: TURN_BACK });
+      leaveRoom(_id).then(() => socket.emit("leave_room"));
     }
 
     window.addEventListener("popstate", () => eventHandler());
@@ -27,26 +57,18 @@ function Game() {
     return () => window.removeEventListener("popstate", () => eventHandler());
   }, []);
 
-  useEffect(() => {
-    dispatch({ type: CANCEL_BACK });
-  }, []);
-
-  useEffect(() => {
-    const room = localStorage.getItem("room");
-    if (!room) {
-      nav("/react-chess/rooms");
-    }
-  }, []);
-
-  return (
-    <>
-      <Header />
-      <Board />
-      {isTurningBack && <Modal children={<RemoveRoom />} />}
-      {isPawnPromoted && <Modal children={<Promoted />} />}
-      {isCheckmate && <Modal children={<EndGame />} />}
-    </>
-  );
+  if (invalidID) {
+    return <div>{errorMSG}</div>;
+  } else {
+    return (
+      <>
+        <Header />
+        <Board />
+        {isPawnPromoted && <Modal children={<Promoted />} />}
+        {isCheckmate && <Modal children={<EndGame />} />}
+      </>
+    );
+  }
 }
 
 export default Game;

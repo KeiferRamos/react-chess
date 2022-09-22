@@ -10,13 +10,7 @@ import {
 import { useState, useEffect, useContext } from "react";
 import { MoveType, PiecePropType } from "../types/types";
 import { ContextProvider } from "../context/globalcontext";
-import {
-  CHECK_MATE,
-  KILL_PIECE,
-  MOVE_PIECE,
-  OPEN_MODAL,
-  SELECT_PIECE,
-} from "../actions/actions";
+import { CHECK_MATE, SELECT_PIECE, MOVE_PIECE } from "../actions/actions";
 import PawnMove from "../pieces/pawn/index";
 import { RookMove } from "../pieces/rook";
 import { KnightMove } from "../pieces/knight";
@@ -25,8 +19,10 @@ import { QueenMove } from "../pieces/queen/moves";
 import { KingMove } from "../pieces/king";
 import select from "../functions/select";
 import { createTable } from "../helper/createTable";
-import { getDirection } from "../helper/direction";
+
 import { movePiece } from "../functions/move";
+import { updatePieces } from "../api/board";
+import { socket } from "../index";
 
 export const pieces = {
   pawn: <FaChessPawn />,
@@ -45,7 +41,15 @@ function Tile({ tileID }: { tileID: string }) {
   const [tileBG, setTileBG] = useState<string>("");
 
   const {
-    state: { selectedPiece, livePieces, allValidMoves, current },
+    state: {
+      selectedPiece,
+      livePieces,
+      allValidMoves,
+      current,
+      deadPieces,
+      _id,
+      userSelected,
+    },
     dispatch,
   } = useContext(ContextProvider);
 
@@ -62,9 +66,51 @@ function Tile({ tileID }: { tileID: string }) {
       rook: (args: MoveType) => RookMove(args),
       queen: (args: MoveType) => QueenMove(args),
     };
+    if (userSelected !== current) {
+      return;
+    }
 
     if (selectedPiece && allValidMoves.includes(tileID)) {
-      movePiece({ livePieces, tileID, selectedPiece, dispatch, allMoves });
+      const { update, opposite } = movePiece({
+        livePieces,
+        tileID,
+        selectedPiece,
+        dispatch,
+        allMoves,
+      });
+
+      const opponent = livePieces.filter(
+        ({ color }) => color !== selectedPiece.color
+      );
+
+      const opponentTurn: string[] = [];
+      opponent.forEach((piece) => {
+        const validMoves = select({
+          selected: piece,
+          allMoves,
+          livePieces: update,
+        });
+        opponentTurn.push(...validMoves);
+      });
+
+      const table = createTable();
+      const allMovesInBoard: string[] = [];
+      table.forEach((row) => {
+        allMovesInBoard.push(...row);
+      });
+
+      const isInBoard = opponentTurn.filter((move) =>
+        allMovesInBoard.includes(move)
+      );
+
+      if (isInBoard.length <= 0) {
+        dispatch({ type: CHECK_MATE });
+      } else {
+        dispatch({ type: MOVE_PIECE, payload: [update, opposite] });
+      }
+      updatePieces(update, deadPieces, opposite, _id).then(() => {
+        socket.emit("update_board", { _id });
+      });
     }
     if (selected && selected.color === current) {
       const validMoves = select({ selected, allMoves, livePieces });

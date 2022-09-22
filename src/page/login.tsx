@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useParams } from "react-router";
 import Register from "../components/register";
 import SignIn from "../components/signin";

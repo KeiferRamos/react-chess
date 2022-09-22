@@ -1,5 +1,4 @@
 import {
-  CANCEL_BACK,
   CHECK_MATE,
   CLOSE_MODAL,
   KILL_PIECE,
@@ -8,7 +7,9 @@ import {
   PLAY_AGAIN,
   PROMOTE_PAWN,
   SELECT_PIECE,
-  TURN_BACK,
+  SET_BOARD,
+  SET_SELECTED,
+  UPDATE_BOARD,
 } from "../actions/actions";
 import { currentState } from "../store/store";
 
@@ -25,6 +26,9 @@ export function reducer(state: StorePropType, action: reducerType) {
   if (action.type === KILL_PIECE) {
     return { ...state, deadPieces: [...state.deadPieces, action.payload] };
   }
+  if (action.type === SET_SELECTED) {
+    return { ...state, userSelected: action.payload };
+  }
   if (action.type === MOVE_PIECE) {
     return {
       ...state,
@@ -34,17 +38,28 @@ export function reducer(state: StorePropType, action: reducerType) {
       allValidMoves: [],
     };
   }
+  if (action.type === UPDATE_BOARD) {
+    const { livePieces, deadPieces, current } = action.payload;
+    return {
+      ...state,
+      livePieces,
+      deadPieces,
+      current,
+    };
+  }
+  if (action.type === SET_BOARD) {
+    return {
+      ...state,
+      livePieces: action.payload[0],
+      current: action.payload[1],
+      _id: action.payload[2],
+    };
+  }
   if (action.type === PROMOTE_PAWN) {
     return { ...state, livePieces: action.payload, isPawnPromoted: false };
   }
   if (action.type === PLAY_AGAIN) {
     return currentState;
-  }
-  if (action.type === TURN_BACK) {
-    return { ...state, isTurningBack: true };
-  }
-  if (action.type === CANCEL_BACK) {
-    return { ...state, isTurningBack: false };
   }
   if (action.type === CLOSE_MODAL) {
     return { ...state, isPawnPromoted: false };

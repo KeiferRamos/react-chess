@@ -1,51 +1,44 @@
-import { useMutation } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaChessPawn } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import { CREATE_ROOM } from "../graphql/mutation";
 import Input from "./input";
-import { MessageType } from "../types/types";
+import { MessageType, joinRoomType } from "../types/types";
+import { create } from "../api/room";
+import { socket } from "../index";
+import { ContextProvider } from "../context/globalcontext";
+import { SET_SELECTED } from "../actions/actions";
 
-function Create({ refetch }: any) {
+function Create() {
+  const { dispatch } = useContext(ContextProvider);
   const nav = useNavigate();
   const initialValue = {
     name: "",
     password: "",
+    selected: "",
   };
 
-  const [create, { data }] = useMutation(CREATE_ROOM);
+  const [inputs, setInputs] = useState<joinRoomType>(initialValue);
 
-  const [inputs, setInputs] = useState(initialValue);
   const [message, setMessage] = useState<MessageType>({
     message: "create room here!",
     success: false,
   });
-  const [selected, setSelected] = useState<string | null>(null);
 
   const updateInputs = (e: React.ChangeEvent, item: string) => {
     setInputs({ ...inputs, [item]: (e.target as HTMLInputElement).value });
   };
 
   const createRoom = () => {
-    if (message) {
-      const creator = localStorage.getItem("username")!;
-      create({ variables: { input: { selected, creator, ...inputs } } });
-      refetch();
-    }
+    create({ ...inputs }).then((data) => {
+      if (data.success) {
+        dispatch({ type: SET_SELECTED, payload: data.userColor });
+        socket.emit("create_room");
+        nav(`/react-chess/game/${data.room._id}`);
+      } else {
+        setMessage(data);
+      }
+    });
   };
-
-  useEffect(() => {
-    if (message.success) {
-      localStorage.setItem("room", JSON.stringify({ roomName: inputs.name }));
-      nav("/react-chess/game");
-    }
-  }, [message]);
-
-  useEffect(() => {
-    if (data) {
-      setMessage(data.createRoom);
-    }
-  }, [data]);
 
   return (
     <div className="creators-room">
@@ -57,10 +50,12 @@ function Create({ refetch }: any) {
               key={i}
               style={{
                 color,
-                background: `${selected === color ? "#3374b3" : "#82454e"}`,
+                background: `${
+                  inputs.selected === color ? "#3374b3" : "#82454e"
+                }`,
               }}
               className="select-color"
-              onClick={() => setSelected(color)}
+              onClick={() => setInputs({ ...inputs, selected: color })}
             >
               <FaChessPawn />
               <p style={{ fontSize: "14px" }}>{color}</p>
@@ -68,7 +63,7 @@ function Create({ refetch }: any) {
           );
         })}
       </div>
-      {Object.keys(inputs).map((item, i) => {
+      {["name", "password"].map((item, i) => {
         const args = { inputs, item, updateInputs };
         return <Input key={i} {...args} />;
       })}

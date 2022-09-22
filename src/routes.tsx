@@ -11,8 +11,9 @@ function RoutesPage() {
         element={<Navigate to="/react-chess/login" />}
       />
       <Route path="/react-chess/:query" element={<LoginPage />} />
-      <Route path="/react-chess/game" element={<Game />} />
+      <Route path="/react-chess/game/:_id" element={<Game />} />
       <Route path="/react-chess/rooms" element={<Rooms />} />
+      <Route path="*" element={<Navigate to="/react-chess/login" />} />
     </Routes>
   );
 }

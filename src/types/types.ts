@@ -19,11 +19,33 @@ export type StorePropType = {
   allValidMoves: string[];
   isCheckmate: boolean;
   isUserLoggedIn: boolean;
-  isTurningBack: Boolean;
+  _id: string | undefined;
+  userSelected: ColorType["color"];
 };
 
 export type directionType = {
   type: "top" | "bot" | "left" | "right";
+};
+
+type SetActionType = {
+  type: "SET_BOARD";
+  payload: [PiecePropType[], ColorType["color"], string | undefined];
+};
+
+export type UpdatePayloadType = {
+  livePieces: PiecePropType[];
+  deadPieces: PiecePropType[];
+  current: ColorType["color"];
+};
+
+type UpdateActionType = {
+  type: "UPDATE_BOARD";
+  payload: UpdatePayloadType;
+};
+
+type SelectColorActionType = {
+  type: "SET_SELECTED";
+  payload: ColorType["color"];
 };
 
 type MoveActionType = {
@@ -42,13 +64,7 @@ type KillActionType = {
 };
 
 type ModalType = {
-  type:
-    | "CLOSE_MODAL"
-    | "OPEN_MODAL"
-    | "CHECK_MATE"
-    | "PLAY_AGAIN"
-    | "TURN_BACK"
-    | "CANCEL_BACK";
+  type: "CLOSE_MODAL" | "OPEN_MODAL" | "CHECK_MATE" | "PLAY_AGAIN";
   payload?: never;
 };
 
@@ -62,7 +78,10 @@ export type reducerType =
   | SelectActionType
   | ModalType
   | PromotePawnType
-  | KillActionType;
+  | KillActionType
+  | SetActionType
+  | UpdateActionType
+  | SelectColorActionType;
 
 export type moveHandlerType = {
   selectedPiece: PiecePropType | null;
@@ -123,9 +142,17 @@ export type LoginQueryType = {
   query: "login" | "register";
 };
 
-export type RoomType = {
-  creator: string;
+export type joinRoomType = {
   name: string;
   password: string;
-  id: number;
+  selected: string;
+};
+
+export type RoomType = {
+  name: string;
+  password: string;
+  creator: string;
+  _id: string;
+  players: { selected: ColorType["color"]; username: string }[];
+  game: { livePieces: PiecePropType[]; deadPieces: PiecePropType[] };
 };

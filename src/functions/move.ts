@@ -8,6 +8,7 @@ import {
 import select from "./select";
 import { MoveFunctionType } from "../types/types";
 import { getDirection } from "../helper/direction";
+import { PiecePropType } from "../types/types";
 
 export const movePiece = ({
   livePieces,
@@ -15,7 +16,10 @@ export const movePiece = ({
   selectedPiece,
   dispatch,
   allMoves,
-}: MoveFunctionType) => {
+}: MoveFunctionType): {
+  update: PiecePropType[];
+  opposite: "white" | "black";
+} => {
   const hasPiece = livePieces.find(({ position }) => position === tileID);
 
   const opposite = selectedPiece.color === "white" ? "black" : "white";
@@ -42,33 +46,5 @@ export const movePiece = ({
     }
   });
 
-  const opponent = livePieces.filter(
-    ({ color }) => color !== selectedPiece.color
-  );
-
-  const opponentTurn: string[] = [];
-  opponent.forEach((piece) => {
-    const validMoves = select({
-      selected: piece,
-      allMoves,
-      livePieces: update,
-    });
-    opponentTurn.push(...validMoves);
-  });
-
-  const table = createTable();
-  const allMovesInBoard: string[] = [];
-  table.forEach((row) => {
-    allMovesInBoard.push(...row);
-  });
-
-  const isInBoard = opponentTurn.filter((move) =>
-    allMovesInBoard.includes(move)
-  );
-
-  dispatch({ type: MOVE_PIECE, payload: [update, opposite] });
-
-  if (isInBoard.length <= 0) {
-    dispatch({ type: CHECK_MATE });
-  }
+  return { update, opposite };
 };

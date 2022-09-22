@@ -1,16 +1,16 @@
 import { StorePropType } from "../types/types";
-import Pieces from "../pieces/index";
 
 export const currentState: StorePropType = {
   selectedPiece: null,
-  livePieces: Pieces,
+  livePieces: [],
   deadPieces: [],
   current: "white",
   isPawnPromoted: false,
   allValidMoves: [],
   isCheckmate: false,
   isUserLoggedIn: false,
-  isTurningBack: false,
+  _id: "",
+  userSelected: "white",
 };
 
 export const store: StorePropType = currentState;
