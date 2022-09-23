@@ -66,6 +66,7 @@ function Tile({ tileID }: { tileID: string }) {
       rook: (args: MoveType) => RookMove(args),
       queen: (args: MoveType) => QueenMove(args),
     };
+
     if (userSelected !== current) {
       return;
     }
@@ -84,6 +85,7 @@ function Tile({ tileID }: { tileID: string }) {
       );
 
       const opponentTurn: string[] = [];
+
       opponent.forEach((piece) => {
         const validMoves = select({
           selected: piece,
@@ -94,6 +96,7 @@ function Tile({ tileID }: { tileID: string }) {
       });
 
       const table = createTable();
+
       const allMovesInBoard: string[] = [];
       table.forEach((row) => {
         allMovesInBoard.push(...row);

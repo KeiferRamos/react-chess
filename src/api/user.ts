@@ -1,7 +1,7 @@
 import axios from "axios";
 import { UserInputType } from "../types/types";
 
-const BASE_URL = "http://localhost:5000/api/v1/users";
+const BASE_URL = "https://react-chess-server.herokuapp.com/api/v1/users";
 
 export const register = async (body: UserInputType) => {
   try {
