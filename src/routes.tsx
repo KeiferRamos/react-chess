@@ -6,10 +6,10 @@ import Rooms from "./page/rooms";
 function RoutesPage() {
   return (
     <Routes>
-      <Route
+      {/* <Route
         path="/react-chess"
         element={<Navigate to="/react-chess/login" />}
-      />
+      /> */}
       <Route path="/react-chess/:query" element={<LoginPage />} />
       <Route path="/react-chess/game/:_id" element={<Game />} />
       <Route path="/react-chess/rooms" element={<Rooms />} />
