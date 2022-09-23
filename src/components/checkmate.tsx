@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { PLAY_AGAIN } from "../actions/actions";
 import { ContextProvider } from "../context/globalcontext";
 

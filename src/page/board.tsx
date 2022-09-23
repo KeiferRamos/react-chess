@@ -8,7 +8,7 @@ import { ContextProvider } from "../context/globalcontext";
 import { useParams } from "react-router";
 import { findRoom, leaveRoom } from "../api/room";
 import { socket } from "../index";
-import { SET_BOARD, UPDATE_BOARD } from "../actions/actions";
+import { CHECK_MATE, SET_BOARD, UPDATE_BOARD } from "../actions/actions";
 import { UpdatePayloadType } from "../types/types";
 
 function Game() {
@@ -26,7 +26,6 @@ function Game() {
         const {
           room: {
             game: { livePieces, current },
-            players,
           },
         } = data;
         setInvalidID(false);
@@ -44,6 +43,9 @@ function Game() {
   useEffect(() => {
     socket.on("view_board", (data: UpdatePayloadType) => {
       dispatch({ type: UPDATE_BOARD, payload: data });
+    });
+    socket.on("view_modal", () => {
+      dispatch({ type: CHECK_MATE });
     });
   }, [socket]);
 

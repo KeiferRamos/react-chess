@@ -105,6 +105,7 @@ function Tile({ tileID }: { tileID: string }) {
 
       if (isInBoard.length <= 0) {
         dispatch({ type: CHECK_MATE });
+        socket.emit("check_mate", { current });
       } else {
         dispatch({ type: MOVE_PIECE, payload: [update, opposite] });
       }
