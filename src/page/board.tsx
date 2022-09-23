@@ -10,6 +10,7 @@ import { findRoom, leaveRoom } from "../api/room";
 import { socket } from "../index";
 import { CHECK_MATE, SET_BOARD, UPDATE_BOARD } from "../actions/actions";
 import { UpdatePayloadType } from "../types/types";
+import pieces from "../pieces/index";
 
 function Game() {
   const { _id } = useParams();
@@ -46,6 +47,9 @@ function Game() {
     });
     socket.on("view_modal", () => {
       dispatch({ type: CHECK_MATE });
+    });
+    socket.on("reset", () => {
+      dispatch({ type: SET_BOARD, payload: [pieces, "white", _id] });
     });
   }, [socket]);
 

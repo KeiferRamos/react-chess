@@ -53,6 +53,9 @@ export function reducer(state: StorePropType, action: reducerType) {
       livePieces: action.payload[0],
       current: action.payload[1],
       _id: action.payload[2],
+      isCheckmate: false,
+      selectedPiece: null,
+      allValidMoves: [],
     };
   }
   if (action.type === PROMOTE_PAWN) {
