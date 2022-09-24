@@ -78,6 +78,7 @@ function Tile({ tileID }: { tileID: string }) {
         selectedPiece,
         dispatch,
         allMoves,
+        _id,
       });
 
       const opponent = livePieces.filter(

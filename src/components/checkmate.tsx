@@ -15,7 +15,7 @@ function EndGame() {
   const playAgain = () => {
     restartGame(_id).then(() => {
       socket.emit("restart_game");
-      dispatch({ type: SET_BOARD, payload: [pieces, "white", _id] });
+      dispatch({ type: SET_BOARD, payload: [pieces, "white", _id, []] });
     });
   };
 

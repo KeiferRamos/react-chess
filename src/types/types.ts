@@ -22,6 +22,7 @@ export type StorePropType = {
   _id: string | undefined;
   userSelected: ColorType["color"];
   winner: ColorType["color"] | "";
+  kingMove: string[];
 };
 
 export type directionType = {
@@ -30,7 +31,7 @@ export type directionType = {
 
 type SetActionType = {
   type: "SET_BOARD";
-  payload: [PiecePropType[], ColorType["color"], string | undefined];
+  payload: [PiecePropType[], ColorType["color"], string | undefined, string[]];
 };
 
 export type UpdatePayloadType = {
@@ -116,6 +117,7 @@ export type MoveFunctionType = {
   selectedPiece: PiecePropType;
   dispatch: (value: reducerType) => void;
   allMoves: any;
+  _id: string | undefined;
 };
 
 export type UserInputType = {

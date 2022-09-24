@@ -12,6 +12,7 @@ export const currentState: StorePropType = {
   _id: "",
   userSelected: "white",
   winner: "",
+  kingMove: [],
 };
 
 export const store: StorePropType = currentState;

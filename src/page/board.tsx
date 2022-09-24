@@ -27,13 +27,13 @@ function Game() {
       if (data.success) {
         const {
           room: {
-            game: { livePieces, current },
+            game: { livePieces, current, KingMove },
           },
         } = data;
         setInvalidID(false);
         dispatch({
           type: SET_BOARD,
-          payload: [livePieces, current, _id],
+          payload: [livePieces, current, _id, KingMove],
         });
       } else {
         setInvalidID(true);
@@ -50,8 +50,17 @@ function Game() {
       dispatch({ type: CHECK_MATE, payload: current });
     });
     socket.on("reset", () => {
-      dispatch({ type: SET_BOARD, payload: [pieces, "white", _id] });
+      dispatch({ type: SET_BOARD, payload: [pieces, "white", _id, []] });
     });
+    socket.on(
+      "move_king",
+      ({ game: { livePieces, current, KingMove }, _id }) => {
+        dispatch({
+          type: SET_BOARD,
+          payload: [livePieces, current, _id, KingMove],
+        });
+      }
+    );
   }, [socket]);
 
   useEffect(() => {
