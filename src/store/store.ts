@@ -11,6 +11,7 @@ export const currentState: StorePropType = {
   isUserLoggedIn: false,
   _id: "",
   userSelected: "white",
+  winner: "",
 };
 
 export const store: StorePropType = currentState;

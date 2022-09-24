@@ -71,7 +71,7 @@ export function reducer(state: StorePropType, action: reducerType) {
     return { ...state, isPawnPromoted: true };
   }
   if (action.type === CHECK_MATE) {
-    return { ...state, isCheckmate: true };
+    return { ...state, isCheckmate: true, winner: action.payload };
   }
 
   return state;

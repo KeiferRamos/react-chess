@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { socket } from "../index";
 import { SET_BOARD } from "../actions/actions";
 import { restartGame } from "../api/board";
@@ -7,9 +7,10 @@ import pieces from "../pieces/index";
 
 function EndGame() {
   const {
-    state: { current, _id },
+    state: { _id, userSelected, winner },
     dispatch,
   } = useContext(ContextProvider);
+  const [win, setwin] = useState("");
 
   const playAgain = () => {
     restartGame(_id).then(() => {
@@ -18,10 +19,14 @@ function EndGame() {
     });
   };
 
+  useEffect(() => {
+    setwin(winner);
+  }, []);
+
   return (
     <div className="checkmate">
-      <h1>{current === "black" ? "white" : "black"} won!</h1>
-      <button onClick={() => playAgain()}>Play Again</button>
+      <h1>you {userSelected === win ? "won!" : "lose!"}</h1>
+      <button onClick={() => playAgain()}>play again</button>
       <button>Exit</button>
     </div>
   );

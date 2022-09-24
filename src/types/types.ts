@@ -21,6 +21,7 @@ export type StorePropType = {
   isUserLoggedIn: boolean;
   _id: string | undefined;
   userSelected: ColorType["color"];
+  winner: ColorType["color"] | "";
 };
 
 export type directionType = {
@@ -63,8 +64,13 @@ type KillActionType = {
   payload: PiecePropType;
 };
 
+type CheckMateActionType = {
+  type: "CHECK_MATE";
+  payload: ColorType["color"];
+};
+
 type ModalType = {
-  type: "CLOSE_MODAL" | "OPEN_MODAL" | "CHECK_MATE" | "PLAY_AGAIN";
+  type: "CLOSE_MODAL" | "OPEN_MODAL" | "PLAY_AGAIN";
   payload?: never;
 };
 
@@ -81,7 +87,8 @@ export type reducerType =
   | KillActionType
   | SetActionType
   | UpdateActionType
-  | SelectColorActionType;
+  | SelectColorActionType
+  | CheckMateActionType;
 
 export type moveHandlerType = {
   selectedPiece: PiecePropType | null;

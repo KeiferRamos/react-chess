@@ -20,6 +20,7 @@ function Game() {
   } = useContext(ContextProvider);
   const [invalidID, setInvalidID] = useState(false);
   const [errorMSG, setErrorMSG] = useState("");
+  const [winner, setWinner] = useState("");
 
   useEffect(() => {
     findRoom(_id).then((data) => {
@@ -45,8 +46,8 @@ function Game() {
     socket.on("view_board", (data: UpdatePayloadType) => {
       dispatch({ type: UPDATE_BOARD, payload: data });
     });
-    socket.on("view_modal", () => {
-      dispatch({ type: CHECK_MATE });
+    socket.on("view_modal", ({ current }) => {
+      dispatch({ type: CHECK_MATE, payload: current });
     });
     socket.on("reset", () => {
       dispatch({ type: SET_BOARD, payload: [pieces, "white", _id] });

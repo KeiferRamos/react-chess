@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
 
-export const socket = io("https://react-chess-server.herokuapp.com");
+export const socket = io("http://localhost:5000");
 
 axios.defaults.withCredentials = true;
 
