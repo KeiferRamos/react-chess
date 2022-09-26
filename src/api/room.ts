@@ -2,7 +2,7 @@ import axios from "axios";
 import { joinRoomType } from "../types/types";
 
 // const BASE_URL = "http://localhost:5000/api/v1/rooms";
-const BASE_URL = "https://react-chess-server.herokuapp.com/api/v1/rooms";
+const BASE_URL = "https://long-lime-cuttlefish-sock.cyclic.app/api/v1/rooms";
 
 export const create = async (body: joinRoomType) => {
   try {
