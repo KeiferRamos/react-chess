@@ -6,7 +6,7 @@ import axios from "axios";
 import io from "socket.io-client";
 
 // export const socket = io("http://localhost:5000");
-export const socket = io("https://react-chess-server.herokuapp.com");
+export const socket = io("https://long-lime-cuttlefish-sock.cyclic.app");
 
 axios.defaults.withCredentials = true;
 
