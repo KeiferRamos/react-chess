@@ -2,14 +2,12 @@ import { OPEN_MODAL, KILL_PIECE } from "../actions/actions";
 import { MoveFunctionType } from "../types/types";
 import { getDirection } from "../helper/direction";
 import { PiecePropType } from "../types/types";
-import { socket } from "../index";
 
 export const movePiece = ({
   livePieces,
   tileID,
   selectedPiece,
   dispatch,
-  _id,
 }: MoveFunctionType): {
   update: PiecePropType[];
   opposite: "white" | "black";
@@ -24,10 +22,6 @@ export const movePiece = ({
       dispatch({ type: OPEN_MODAL });
     }
   }
-  if (selectedPiece.name === "king") {
-    socket.emit("king_move", { color: selectedPiece.color, _id });
-  }
-
   const castling: [boolean, string] = [false, ""];
 
   const { name, position, color } = selectedPiece;

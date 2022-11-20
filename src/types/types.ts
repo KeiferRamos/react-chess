@@ -18,11 +18,6 @@ export type StorePropType = {
   isPawnPromoted: Boolean;
   allValidMoves: string[];
   isCheckmate: boolean;
-  isUserLoggedIn: boolean;
-  _id: string | undefined;
-  userSelected: ColorType["color"];
-  winner: ColorType["color"] | "";
-  kingMove: string[];
 };
 
 export type directionType = {
@@ -38,16 +33,6 @@ export type UpdatePayloadType = {
   livePieces: PiecePropType[];
   deadPieces: PiecePropType[];
   current: ColorType["color"];
-};
-
-type UpdateActionType = {
-  type: "UPDATE_BOARD";
-  payload: UpdatePayloadType;
-};
-
-type SelectColorActionType = {
-  type: "SET_SELECTED";
-  payload: ColorType["color"];
 };
 
 type MoveActionType = {
@@ -67,11 +52,11 @@ type KillActionType = {
 
 type CheckMateActionType = {
   type: "CHECK_MATE";
-  payload: ColorType["color"];
+  payload: [ColorType["color"], PiecePropType[]];
 };
 
 type ModalType = {
-  type: "CLOSE_MODAL" | "OPEN_MODAL" | "PLAY_AGAIN";
+  type: "OPEN_MODAL" | "PLAY_AGAIN";
   payload?: never;
 };
 
@@ -87,8 +72,6 @@ export type reducerType =
   | PromotePawnType
   | KillActionType
   | SetActionType
-  | UpdateActionType
-  | SelectColorActionType
   | CheckMateActionType;
 
 export type moveHandlerType = {
@@ -117,7 +100,6 @@ export type MoveFunctionType = {
   selectedPiece: PiecePropType;
   dispatch: (value: reducerType) => void;
   allMoves: any;
-  _id: string | undefined;
 };
 
 export type UserInputType = {

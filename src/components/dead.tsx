@@ -1,4 +1,3 @@
-import React from "react";
 import { PiecePropType } from "../types/types";
 import { pieces } from "../components/tile";
 

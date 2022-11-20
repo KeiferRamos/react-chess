@@ -1,21 +1,17 @@
 import { useContext } from "react";
-
 import {
   FaChessQueen,
   FaChessRook,
   FaChessKnight,
   FaChessBishop,
 } from "react-icons/fa";
-
 import { PROMOTE_PAWN } from "../actions/actions";
 import { ContextProvider } from "../context/globalcontext";
 import { PiecePropType } from "../types/types";
-import { updatePieces } from "../api/board";
-import { socket } from "../index";
 
 function Promoted() {
   const {
-    state: { livePieces, current, deadPieces, _id },
+    state: { livePieces, current, deadPieces },
     dispatch,
   } = useContext(ContextProvider);
 
@@ -38,9 +34,6 @@ function Promoted() {
     });
 
     dispatch({ type: PROMOTE_PAWN, payload: promotedPawn });
-    updatePieces(promotedPawn, deadPieces, current, _id).then(() => {
-      socket.emit("update_board", { _id });
-    });
   };
 
   return (

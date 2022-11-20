@@ -6,7 +6,6 @@ import {
   FaChessKnight,
   FaChessBishop,
 } from "react-icons/fa";
-
 import { useState, useEffect, useContext } from "react";
 import { MoveType, PiecePropType } from "../types/types";
 import { ContextProvider } from "../context/globalcontext";
@@ -19,10 +18,7 @@ import { QueenMove } from "../pieces/queen/moves";
 import { KingMove } from "../pieces/king";
 import select from "../functions/select";
 import { createTable } from "../helper/createTable";
-
 import { movePiece } from "../functions/move";
-import { updatePieces } from "../api/board";
-import { socket } from "../index";
 
 export const pieces = {
   pawn: <FaChessPawn />,
@@ -41,15 +37,7 @@ function Tile({ tileID }: { tileID: string }) {
   const [tileBG, setTileBG] = useState<string>("");
 
   const {
-    state: {
-      selectedPiece,
-      livePieces,
-      allValidMoves,
-      current,
-      deadPieces,
-      _id,
-      userSelected,
-    },
+    state: { selectedPiece, livePieces, allValidMoves, current, deadPieces },
     dispatch,
   } = useContext(ContextProvider);
 
@@ -67,10 +55,6 @@ function Tile({ tileID }: { tileID: string }) {
       queen: (args: MoveType) => QueenMove(args),
     };
 
-    if (userSelected !== current) {
-      return;
-    }
-
     if (selectedPiece && allValidMoves.includes(tileID)) {
       const { update, opposite } = movePiece({
         livePieces,
@@ -78,7 +62,6 @@ function Tile({ tileID }: { tileID: string }) {
         selectedPiece,
         dispatch,
         allMoves,
-        _id,
       });
 
       const opponent = livePieces.filter(
@@ -108,14 +91,11 @@ function Tile({ tileID }: { tileID: string }) {
       );
 
       if (isInBoard.length <= 0) {
-        dispatch({ type: CHECK_MATE, payload: current });
-        socket.emit("check_mate", { current });
+        dispatch({ type: CHECK_MATE, payload: [current, update] });
       } else {
+        console.log(opposite);
         dispatch({ type: MOVE_PIECE, payload: [update, opposite] });
       }
-      updatePieces(update, deadPieces, opposite, _id).then(() => {
-        socket.emit("update_board", { _id });
-      });
     }
     if (selected && selected.color === current) {
       const validMoves = select({ selected, allMoves, livePieces });
